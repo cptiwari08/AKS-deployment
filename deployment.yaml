@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: netflix-deploy
+spec:
+  replicas: 4
+  selector: 
+    matchExpressions: 
+    - key: app
+      operator: In
+      values: 
+      - netflix
+  strategy: 
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+  template: 
+    metadata: 
+      labels: 
+        app : netflix
+    spec: 
+      containers: 
+      - image: devopsinsiders/netflix-clone
+        name: netflix-container
+        resources:
+          limits:
+            memory: "1128Mi"
+            cpu: "50m"
+        ports: 
+        - containerPort: 80
